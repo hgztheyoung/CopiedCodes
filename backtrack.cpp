@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include <map>
 namespace ListCombs {
 
 	int solution[5];
@@ -468,33 +469,46 @@ namespace Knapsack {
 	}
 }
 
-namespace ArrayPermutation {
-	const int size = 3;
-	int a[size] = { 1,2,3 };
+namespace CombinationOfArray {
+	const int size = 4;
+	int input[size] = { 1,0,0,0 };
+	int res[size] = {};
+	std::map<int, int> countMap{};
 	void print()
 	{
 		for (auto i = 0; i != size; ++i) {
-			std::cout << a[i] << " ";
+			std::cout << res[i] << ",";
 		}
 		std::cout << std::endl;
 	}
-
+	void init()
+	{
+		for (auto i = 0; i != size; ++i) {
+			if (countMap.find(input[i]) == countMap.end()) {
+				countMap[input[i]] = 1;
+			}
+			else {
+				++countMap[input[i]];
+			}
+		}
+	}
 	void backTrack(int i)
 	{
 		if (i == size) {
 			print();
 			return;
 		}
-		backTrack(i + 1);
-		for (auto k = i+1; k != size; ++k) {
-			if (a[k]!=a[i]) {
-				std::swap(a[i], a[k]);
+		for (auto it : countMap) {
+			if (it.second != 0) {
+				--countMap[it.first];
+				res[i] = it.first;
 				backTrack(i + 1);
-				std::swap(a[i], a[k]);
+				++countMap[it.first];
 			}
 		}
 	}
 }
+
 
 void testBackTracking()
 {
@@ -531,5 +545,6 @@ void testBackTracking()
 	Sudoku::initialize();
 	Sudoku::backTrack(0, 0);
 	*/
-	ArrayPermutation::backTrack(0);
+	CombinationOfArray::init();
+	CombinationOfArray::backTrack(0);
 }
