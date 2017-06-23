@@ -330,7 +330,7 @@ namespace Sudoku {
 			for (auto j = 0; j != size; ++j) {
 				std::cout << solution[i][j] << ",";
 			}
-			std::cout<< std::endl;
+			std::cout << std::endl;
 		}
 		std::cout << "------------------" << std::endl;
 	}
@@ -353,9 +353,9 @@ namespace Sudoku {
 	bool mx[9][10], my[9][10], mg[3][3][10];
 
 	//is available to put n at (x,y)
-	bool isAvailable(int x,int y,int n) 
+	bool isAvailable(int x, int y, int n)
 	{
-		return !mx[x][n] && !my[y][n] 
+		return !mx[x][n] && !my[y][n]
 			&& !mg[x / 3][y / 3][n];
 	}
 	void markState(int x, int y, int n)
@@ -396,7 +396,7 @@ namespace Sudoku {
 	int board[size][size];
 	void initialize()
 	{
-		for (int x = 0; x != size; ++x){
+		for (int x = 0; x != size; ++x) {
 			for (int y = 0; y != size; ++y) {
 				if (board[x][y]) {
 					int n = board[x][y];
@@ -431,9 +431,74 @@ namespace Sudoku {
 	}
 }
 
+namespace Knapsack {
+	const int ic = 10;//ic short for itemCount
+	bool solution[ic];
+	int weight[10] = { 4,5,7,1,2,3,8,20,13,15 };
+	int cost[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	const int maxW = 100;	//背包承重上限
+	int maxC = 0;			//出现过的能装下的最大Cost
 
-int main()
+	bool answer[10];
+	void storeSolution()
+	{
+		for (auto i = 0; i != ic; ++i) {
+			answer[i] = solution[i];
+		}
+	}
+
+	void backTrack(int n, int w, int c)
+	{
+		if (n == ic) {
+			if (c > maxC) {
+				maxC = c;
+				storeSolution();
+			}
+			return;
+		}
+		if (w + weight[n] < maxW) {
+			//put n in the bag
+			solution[n] = true;
+			backTrack(n + 1, w + weight[n], c + cost[n]);
+		}
+
+		//don't put n in the bag
+		solution[n] = false;
+		backTrack(n + 1, w, c);
+	}
+}
+
+namespace ArrayPermutation {
+	const int size = 3;
+	int a[size] = { 1,2,3 };
+	void print()
+	{
+		for (auto i = 0; i != size; ++i) {
+			std::cout << a[i] << " ";
+		}
+		std::cout << std::endl;
+	}
+
+	void backTrack(int i)
+	{
+		if (i == size) {
+			print();
+			return;
+		}
+		backTrack(i + 1);
+		for (auto k = i+1; k != size; ++k) {
+			if (a[k]!=a[i]) {
+				std::swap(a[i], a[k]);
+				backTrack(i + 1);
+				std::swap(a[i], a[k]);
+			}
+		}
+	}
+}
+
+void testBackTracking()
 {
+	/*
 	ListCombs::backTrack(0);
 
 	auto n = 2;
@@ -458,13 +523,13 @@ int main()
 
 	EightQueen::backTrack(0,0);
 	EightQueen::rowBackTrack(0);
-	
+
 	Sudoku::board[0][0] = 1;
 	Sudoku::board[1][1] = 2;
 
 	Sudoku::board[2][2] = 3;
 	Sudoku::initialize();
 	Sudoku::backTrack(0, 0);
-
-	return 0;
+	*/
+	ArrayPermutation::backTrack(0);
 }
